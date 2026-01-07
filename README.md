@@ -291,6 +291,11 @@ sudo ufw allow 2003:2009/tcp
 ----
 
 Windows Setup
+> [!TIP]
+> **Quick Start for Windows Users**: We have created a dedicated guide for you!
+> Please check [SETUP_WINDOWS.md](SETUP_WINDOWS.md) for detailed instructions.
+> You can also run `powershell -ExecutionPolicy Bypass -File setup_windows.ps1` to automate strict dependencies installation.
+
 For Windows, dependencies must be installed individually. Using a package manager like Chocolatey can simplify the process.
 [!NOTE]
 After installing command-line tools like FFmpeg or Tesseract, you must add their installation bin directories to your system's PATH environment variable and restart your terminal or command prompt.
