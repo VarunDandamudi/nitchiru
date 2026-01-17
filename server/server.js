@@ -32,7 +32,7 @@ const userRoutes = require("./routes/user");
 const chatRoutes = require("./routes/chat");
 const uploadRoutes = require("./routes/upload");
 const analysisRoutes = require("./routes/analysis");
-const adminMasterRouter = require('./routes/index'); 
+const adminMasterRouter = require('./routes/index');
 const subjectsRoutes = require("./routes/subjects");
 const generationRoutes = require("./routes/generationRoutes");
 const exportRoutes = require("./routes/export");
@@ -45,6 +45,7 @@ const knowledgeSourceRoutes = require("./routes/knowledgeSource");
 const analyticsRoutes = require('./routes/analytics');
 const feedbackRoutes = require('./routes/feedback');
 const finetuningRoutes = require('./routes/finetuning');
+const socraticRoutes = require("./routes/socratic");
 const { setupAdmin } = require('./scripts/setupAdmin');
 
 
@@ -69,18 +70,18 @@ app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 
 app.use((req, res, next) => {
-    const end = httpRequestDurationMicroseconds.startTimer();
-    res.on('finish', () => {
-        end({ route: req.route?.path || req.path, code: res.statusCode, method: req.method });
-    });
-    next();
+  const end = httpRequestDurationMicroseconds.startTimer();
+  res.on('finish', () => {
+    end({ route: req.route?.path || req.path, code: res.statusCode, method: req.method });
+  });
+  next();
 });
 
 // --- API Route Mounting ---
 app.get("/", (req, res) => res.send("AI Tutor Backend API is running..."));
 app.get('/metrics', async (req, res) => {
-    res.set('Content-Type', register.contentType);
-    res.end(await register.metrics());
+  res.set('Content-Type', register.contentType);
+  res.end(await register.metrics());
 });
 app.use("/api/network", networkRoutes);
 app.use("/api/auth", authRoutes);
@@ -107,6 +108,7 @@ app.use("/api/kg", kgRoutes);
 app.use("/api/llm", llmConfigRoutes);
 app.use("/api/tools", toolsRoutes);
 app.use("/api/knowledge-sources", knowledgeSourceRoutes);
+app.use("/api/socratic", socraticRoutes);
 
 // --- SENTRY ERROR HANDLER ---
 // This must be registered before any other error middleware and after all controllers
@@ -118,11 +120,11 @@ app.use('/api/feedback', feedbackRoutes);
 // --- Centralized Error Handling ---
 app.use((err, req, res, next) => {
   logger.error("Unhandled Error:", {
-      message: err.message,
-      stack: err.stack,
-      status: err.status,
-      url: req.originalUrl,
-      method: req.method
+    message: err.message,
+    stack: err.stack,
+    status: err.status,
+    url: req.originalUrl,
+    method: req.method
   });
 
   const statusCode = err.status || 500;
@@ -137,7 +139,7 @@ app.use((err, req, res, next) => {
 async function startServer() {
   logger.info("--- Starting Server Initialization ---");
   try {
-    await setupAdmin(mongoUri);
+    // await setupAdmin(mongoUri);
     await ensureServerDirectories();
     await connectDB(mongoUri);
     await performAssetCleanup();
@@ -155,11 +157,15 @@ async function startServer() {
 
     const gracefulShutdown = (signal) => {
       logger.info(`${signal} received. Shutting down...`);
-      server.close(() => {
-        mongoose.connection.close(false, () => {
+      server.close(async () => {
+        try {
+          await mongoose.connection.close(false);
           logger.info("MongoDB connection closed.");
           process.exit(0);
-        });
+        } catch (err) {
+          logger.error("Error during shutdown:", err);
+          process.exit(1);
+        }
       });
     };
     process.on("SIGTERM", () => gracefulShutdown("SIGTERM"));

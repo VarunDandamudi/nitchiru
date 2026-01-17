@@ -3,7 +3,8 @@ import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Modal from '../core/Modal';
 // --- THIS IS THE FIX: Added ShieldCheck to the import line ---
-import { Code, FileQuestion, ShieldCheck } from 'lucide-react'; 
+import { Code, FileQuestion, ShieldCheck, Lightbulb } from 'lucide-react';
+
 
 const availableTools = [
     {
@@ -27,6 +28,13 @@ const availableTools = [
         path: '/tools/integrity-checker',
         status: 'active'
     },
+    {
+        title: 'Socratic Tutor (Modular)',
+        description: 'Deepen understanding with a dedicated Socratic Agent (Separate Service).',
+        icon: Lightbulb,
+        path: '/tools/socratic-mode',
+        status: 'active'
+    },
 ];
 
 const ToolsModal = ({ isOpen, onClose }) => {
@@ -46,8 +54,8 @@ const ToolsModal = ({ isOpen, onClose }) => {
                         key={tool.title}
                         onClick={() => handleNavigate(tool.path)}
                         className={`p-4 border rounded-lg transition-all duration-150 group relative
-                            ${tool.status === 'active' 
-                                ? 'cursor-pointer hover:border-primary dark:hover:border-primary-light hover:shadow-lg' 
+                            ${tool.status === 'active'
+                                ? 'cursor-pointer hover:border-primary dark:hover:border-primary-light hover:shadow-lg'
                                 : 'opacity-50 cursor-not-allowed'
                             }
                             bg-surface-light dark:bg-gray-800 border-border-light dark:border-border-dark

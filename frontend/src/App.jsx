@@ -25,6 +25,7 @@ import AcademicIntegrityPage from './components/tools/AcademicIntegrityPage.jsx'
 import LandingPage from './components/landing/LandingPage.jsx';
 import OnboardingFlow from './components/onboarding/OnboardingFlow.jsx';
 import AnalyticsDashboardPage from './components/admin/AnalyticsDashboardPage.jsx';
+import SocraticModePage from './components/tools/SocraticModePage.jsx';
 
 
 function SessionLoadingModal() {
@@ -49,12 +50,12 @@ function SessionLoadingModal() {
     );
 }
 
-function MainAppLayout({ 
-    orchestratorStatus, 
-    handleNewChat, 
-    isSessionLoading, 
-    messages, 
-    setMessages 
+function MainAppLayout({
+    orchestratorStatus,
+    handleNewChat,
+    isSessionLoading,
+    messages,
+    setMessages
 }) {
     const { user: regularUser, logout: regularUserLogout } = useRegularAuth();
     const {
@@ -69,7 +70,7 @@ function MainAppLayout({
     } = useAppState();
     const [isHistoryModalOpen, setIsHistoryModalOpen] = useState(false);
     const [isChatProcessing, setIsChatProcessing] = useState(false);
-    
+
     const handleChatProcessingStatusChange = (isLoading) => {
         setIsChatProcessing(isLoading);
     };
@@ -88,58 +89,58 @@ function MainAppLayout({
     };
 
     return (
-    <>
-        <AnimatePresence>
-            {isSessionLoading && <SessionLoadingModal />}
-        </AnimatePresence>
+        <>
+            <AnimatePresence>
+                {isSessionLoading && <SessionLoadingModal />}
+            </AnimatePresence>
 
-        <TopNav 
-            user={regularUser} 
-            onLogout={handleRegularUserLogout} 
-            onNewChat={handleNewChat}
-            onHistoryClick={() => setIsHistoryModalOpen(true)} 
-            orchestratorStatus={orchestratorStatus}
-            isChatProcessing={isChatProcessing}
-        />
-        <div className="flex flex-1 overflow-hidden pt-16 bg-background-light dark:bg-background-dark">
-            <AnimatePresence mode="wait">
-                {isLeftPanelOpen ? (
-                    <motion.aside key="left-panel-main" initial={{ x: '-100%' }} animate={{ x: '0%' }} exit={{ x: '-100%' }} transition={{ type: 'spring', stiffness: 300, damping: 30 }} className="w-full md:w-72 lg:w-80 xl:w-96 bg-surface-light dark:bg-surface-dark border-r border-border-light dark:border-border-dark overflow-y-auto p-3 sm:p-4 shadow-lg flex-shrink-0 custom-scrollbar">
-                        <LeftPanel isChatProcessing={isChatProcessing} />
-                    </motion.aside>
-                ) : ( <LeftCollapsedNav isChatProcessing={isChatProcessing} /> )}
-            </AnimatePresence>
-            <main className={`flex-1 flex flex-col overflow-hidden p-1 sm:p-2 md:p-4 transition-all duration-300 ease-in-out ${isLeftPanelOpen ? 'lg:ml-0' : 'lg:ml-16 md:ml-14'} ${isRightPanelOpen ? 'lg:mr-0' : 'lg:mr-16 md:mr-14'}`}>
-                <CenterPanel 
-                    messages={messages} 
-                    setMessages={setMessages} 
-                    currentSessionId={currentSessionId}
-                    onChatProcessingChange={handleChatProcessingStatusChange}
-                    initialPromptForNewSession={initialPromptForNewSession}
-                    setInitialPromptForNewSession={setInitialPromptForNewSession}
-                    initialActivityForNewSession={initialActivityForNewSession}
-                    setInitialActivityForNewSession={setInitialActivityForNewSession}
-                />
-            </main>
-            <AnimatePresence mode="wait">
-                {isRightPanelOpen ? (
-                    <motion.aside key="right-panel-main" initial={{ x: '100%' }} animate={{ x: '0%' }} exit={{ x: '100%' }} transition={{ type: 'spring', stiffness: 300, damping: 30 }} className="hidden md:flex md:flex-col md:w-72 lg:w-80 xl:w-96 bg-surface-light dark:bg-surface-dark border-l border-border-light dark:border-border-dark overflow-y-auto p-3 sm:p-4 shadow-lg flex-shrink-0 custom-scrollbar">
-                        <RightPanel isChatProcessing={isChatProcessing} /> {/* Pass the prop */}
-                    </motion.aside>
-                ) : ( <RightCollapsedNav isChatProcessing={isChatProcessing} /> )} {/* Pass the prop */}
-            </AnimatePresence>
-        </div>
-        <ChatHistoryModal isOpen={isHistoryModalOpen} onClose={() => setIsHistoryModalOpen(false)} onSelectSession={handleSelectSessionFromHistory} />
-    </>
+            <TopNav
+                user={regularUser}
+                onLogout={handleRegularUserLogout}
+                onNewChat={handleNewChat}
+                onHistoryClick={() => setIsHistoryModalOpen(true)}
+                orchestratorStatus={orchestratorStatus}
+                isChatProcessing={isChatProcessing}
+            />
+            <div className="flex flex-1 overflow-hidden pt-16 bg-background-light dark:bg-background-dark">
+                <AnimatePresence mode="wait">
+                    {isLeftPanelOpen ? (
+                        <motion.aside key="left-panel-main" initial={{ x: '-100%' }} animate={{ x: '0%' }} exit={{ x: '-100%' }} transition={{ type: 'spring', stiffness: 300, damping: 30 }} className="w-full md:w-72 lg:w-80 xl:w-96 bg-surface-light dark:bg-surface-dark border-r border-border-light dark:border-border-dark overflow-y-auto p-3 sm:p-4 shadow-lg flex-shrink-0 custom-scrollbar">
+                            <LeftPanel isChatProcessing={isChatProcessing} />
+                        </motion.aside>
+                    ) : (<LeftCollapsedNav isChatProcessing={isChatProcessing} />)}
+                </AnimatePresence>
+                <main className={`flex-1 flex flex-col overflow-hidden p-1 sm:p-2 md:p-4 transition-all duration-300 ease-in-out ${isLeftPanelOpen ? 'lg:ml-0' : 'lg:ml-16 md:ml-14'} ${isRightPanelOpen ? 'lg:mr-0' : 'lg:mr-16 md:mr-14'}`}>
+                    <CenterPanel
+                        messages={messages}
+                        setMessages={setMessages}
+                        currentSessionId={currentSessionId}
+                        onChatProcessingChange={handleChatProcessingStatusChange}
+                        initialPromptForNewSession={initialPromptForNewSession}
+                        setInitialPromptForNewSession={setInitialPromptForNewSession}
+                        initialActivityForNewSession={initialActivityForNewSession}
+                        setInitialActivityForNewSession={setInitialActivityForNewSession}
+                    />
+                </main>
+                <AnimatePresence mode="wait">
+                    {isRightPanelOpen ? (
+                        <motion.aside key="right-panel-main" initial={{ x: '100%' }} animate={{ x: '0%' }} exit={{ x: '100%' }} transition={{ type: 'spring', stiffness: 300, damping: 30 }} className="hidden md:flex md:flex-col md:w-72 lg:w-80 xl:w-96 bg-surface-light dark:bg-surface-dark border-l border-border-light dark:border-border-dark overflow-y-auto p-3 sm:p-4 shadow-lg flex-shrink-0 custom-scrollbar">
+                            <RightPanel isChatProcessing={isChatProcessing} /> {/* Pass the prop */}
+                        </motion.aside>
+                    ) : (<RightCollapsedNav isChatProcessing={isChatProcessing} />)} {/* Pass the prop */}
+                </AnimatePresence>
+            </div>
+            <ChatHistoryModal isOpen={isHistoryModalOpen} onClose={() => setIsHistoryModalOpen(false)} onSelectSession={handleSelectSessionFromHistory} />
+        </>
     );
 }
 
 function App() {
     const { token: regularUserToken, user: regularUser, loading: regularUserAuthLoading, setUser: setRegularUserInAuthContext } = useRegularAuth();
-    const { 
-        theme, 
-        setSessionId: setGlobalSessionId, 
-        currentSessionId, 
+    const {
+        theme,
+        setSessionId: setGlobalSessionId,
+        currentSessionId,
         isAdminSessionActive,
         setIsAdminSessionActive,
     } = useAppState();
@@ -164,10 +165,10 @@ function App() {
             if (actualCallback) currentSessionId(currentSessionId);
             return;
         }
-        
+
         setIsSessionLoading(true);
         try {
-            const data = await api.startNewSession(currentSessionId, skipSessionAnalysis); 
+            const data = await api.startNewSession(currentSessionId, skipSessionAnalysis);
             if (data && data.newSessionId) {
                 setGlobalSessionId(data.newSessionId);
                 if (data.studyPlanSuggestion) {
@@ -186,7 +187,7 @@ function App() {
                                     <p className="mt-1 text-sm text-text-muted-light dark:text-text-muted-dark">{reason}</p>
                                     <div className="mt-4 flex gap-2">
                                         <Button size="sm" onClick={() => { navigate('/study-plan', { state: { prefilledGoal: topic } }); toast.dismiss(t.id); }}>
-                                                                                        Create Plan for "{topic}"
+                                            Create Plan for "{topic}"
                                         </Button>
                                         <Button size="sm" variant="secondary" onClick={() => toast.dismiss(t.id)}>Dismiss</Button>
                                     </div>
@@ -197,7 +198,7 @@ function App() {
                 }
                 if (actualCallback) {
                     if (!skipSessionAnalysis) {
-                         toast.success("New chat started!"); 
+                        toast.success("New chat started!");
                     }
                     actualCallback(data.newSessionId);
                 } else if (!skipSessionAnalysis) {
@@ -215,7 +216,7 @@ function App() {
             setIsSessionLoading(false);
         }
     }, [currentSessionId, setGlobalSessionId, navigate, appStateMessages]);
-    
+
     const fetchChatHistory = useCallback(async (sid) => {
         if (!sid || !regularUserToken) {
             setAppStateMessages([]);
@@ -245,7 +246,7 @@ function App() {
 
     useEffect(() => { document.documentElement.className = theme; }, [theme]);
     useEffect(() => { api.getOrchestratorStatus().then(setOrchestratorStatus); }, []);
-    
+
     useEffect(() => {
         const handleAuthAndSession = async () => {
             if (isAdminSessionActive) {
@@ -257,7 +258,7 @@ function App() {
                 setAppInitializing(true); return;
             }
             setAppInitializing(false);
-            
+
             if (regularUserToken && regularUser) {
                 if (regularUser.hasCompletedOnboarding === false) {
                     setIsAwaitingOnboarding(true);
@@ -273,16 +274,16 @@ function App() {
                 const shouldCreateSession = !currentSessionId && !location.pathname.startsWith('/tools') && !location.pathname.startsWith('/study-plan');
                 if (shouldCreateSession && !isCreatingSession) {
                     setIsCreatingSession(true);
-                    await handleNewChat(() => {}, true, true);
+                    await handleNewChat(() => { }, true, true);
                     setIsCreatingSession(false);
                 }
             } else {
-                 document.body.classList.add('landing-page-body');
+                document.body.classList.add('landing-page-body');
             }
         };
         handleAuthAndSession();
     }, [
-        regularUserAuthLoading, regularUserToken, regularUser, isAdminSessionActive, 
+        regularUserAuthLoading, regularUserToken, regularUser, isAdminSessionActive,
         currentSessionId, navigate, location.pathname, handleNewChat, isCreatingSession, isAwaitingOnboarding
     ]);
 
@@ -306,7 +307,7 @@ function App() {
             }
         }
     };
-    
+
     const handleOnboardingComplete = () => {
         if (regularUser) {
             setRegularUserInAuthContext({ ...regularUser, hasCompletedOnboarding: true });
@@ -326,18 +327,18 @@ function App() {
             </div>
         );
     }
-    
+
     return (
         <div className="flex flex-col h-screen overflow-hidden font-sans">
             <AnimatePresence>
                 {showAuthModal && (
-                    <AuthModal 
-                        isOpen={showAuthModal} 
+                    <AuthModal
+                        isOpen={showAuthModal}
                         onClose={handleAuthSuccess}
                         initialViewIsLogin={isLoginViewInModal}
                     />
                 )}
-                {isAwaitingOnboarding && 
+                {isAwaitingOnboarding &&
                     <OnboardingFlow onComplete={handleOnboardingComplete} />
                 }
             </AnimatePresence>
@@ -355,15 +356,16 @@ function App() {
                         <Route path="/study-plan" element={<StudyPlanPage handleNewChat={handleNewChat} />} />
                         <Route path="/tools/quiz-generator" element={<QuizGeneratorPage />} />
                         <Route path="/tools/integrity-checker" element={<AcademicIntegrityPage />} />
+                        <Route path="/tools/socratic-mode" element={<SocraticModePage />} />
                         <Route path="/admin/dashboard" element={<Navigate to="/" replace />} />
                         <Route path="/*" element={
-                            <MainAppLayout 
-                                orchestratorStatus={orchestratorStatus} 
-                                handleNewChat={handleNewChat} 
+                            <MainAppLayout
+                                orchestratorStatus={orchestratorStatus}
+                                handleNewChat={handleNewChat}
                                 isSessionLoading={isSessionLoading}
                                 messages={appStateMessages}
                                 setMessages={setAppStateMessages}
-                              />
+                            />
                         } />
                     </>
                 ) : (
