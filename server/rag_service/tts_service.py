@@ -1,12 +1,20 @@
 # server/rag_service/tts_service.py
 import torch
-from TTS.api import TTS
 import logging
 from pydub import AudioSegment
 import io
 import os
 
 logger = logging.getLogger(__name__)
+
+# --- Optional Import for TTS ---
+try:
+    from TTS.api import TTS
+    TTS_AVAILABLE = True
+except ImportError:
+    TTS_AVAILABLE = False
+    TTS = None
+    logger.warning("Coqui TTS module not found. High-quality speech synthesis will be disabled.")
 
 # --- Model Configuration ---
 # Using the dedicated Indian English model.
@@ -19,6 +27,10 @@ def initialize_tts():
     Initializes the Coqui TTS model once at application startup.
     """
     global tts_instance
+    if not TTS_AVAILABLE:
+        logger.warning("TTS is not available. Skipping initialization.")
+        return
+
     if tts_instance is None:
         try:
             device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -42,6 +54,9 @@ def synthesize_speech(text: str, speaker: str) -> AudioSegment:
     Returns:
         AudioSegment: A pydub AudioSegment object of the synthesized speech.
     """
+    if not TTS_AVAILABLE:
+        raise RuntimeError("TTS module is not installed. Cannot synthesize speech.")
+
     if tts_instance is None:
         raise RuntimeError("TTS service is not initialized. High-quality synthesis is unavailable.")
     
