@@ -6,6 +6,7 @@ import FeedbackModal from '../components/profile/FeedbackModal';
 import Button from '../components/core/Button';
 import SkillTree from '../components/SkillTree';
 import BountyBoard from '../components/BountyBoard';
+import ActivityHeatmap from '../components/ActivityHeatmap';
 import { motion } from 'framer-motion';
 import { User, Trophy, Star, Target, Brain, Award, MessageSquarePlus } from 'lucide-react';
 
@@ -114,8 +115,11 @@ const ProfilePage = () => {
             {/* Main Content Grid */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
-                {/* Left Col: Skill Tree */}
+                {/* Left Col: Skill Tree & Heatmap */}
                 <div className="lg:col-span-2 space-y-6">
+                    <section>
+                        <ActivityHeatmap userId={user?._id} />
+                    </section>
                     <section>
                         <h2 className="text-xl font-bold vibrant-text mb-4 flex items-center gap-2">
                             <Brain className="text-primary" /> Knowledge Map
